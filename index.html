@@ -5,23 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Quiz Game</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 
-    <!-- Sweet Alert -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Loading Overlay -->
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
-    <!-- LIFF SDK --> 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
     <style>
@@ -88,28 +82,27 @@
 <body onload="initializeLiff()">
 
     <center class="mb-4">
-        <img src="https://lh3.googleusercontent.com/d/1x6Obg8pQTwyOCOJgUeedP69z_zp37OW6" class="mt-4" style="width:200px; height:auto; padding-bottom: 10px;">
-        <h2> PsyQ : จิตเวช 5 ข้อ...รอให้คุณตอบ!</h2>
-        <h5 class="text-center text-danger">ระบบทบทวนความรู้การพยาบาลสุขภาพจิตและจิตเวช</h5>
+        <img src="https://via.placeholder.com/200x100?text=Daily+Quiz" class="mt-4" style="width:200px; height:auto; padding-bottom: 10px;">
+        <h2> Daily Quiz</h2>
+        <h5 class="text-center text-danger">สื่อ และนวัตกรรมครูสิทธิชาติ สิทธิ</h5>
     </center>
 
-    <!-- Info Box -->
     <div class="container list py-5">
         <div class="card ">
             <div class="card-header bg-primary text-white text-center">
-                <h5 class="card-title mb-4 mt-4">คำชี้แจงในการทำแบบทดสอบรายวัน PsyQ</h5>
+                <h5 class="card-title mb-4 mt-4">คำชี้แจงในการทำแบบทดสอบ</h5>
             </div>
             <div class="card-body text-dark">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">1. มีเวลา <span id="timeValueDisplay">60</span> วินาทีในการทำแต่ละข้อ</li>
                     <li class="list-group-item">2. เมื่อตอบแล้วไม่สามารถเปลี่ยนคำตอบได้</li>
                     <li class="list-group-item">3. เมื่อทำเสร็จแล้วจะไม่สามารถแก้ไขได้อีก</li>
-                    <li class="list-group-item">4. ต้องทำข้อสอบให้ครบทุกข้อในแต่ละครั้ง</li>
+                    <li class="list-group-item">4. ต้องทำข้อสอบให้ครบทุกข้อ</li>
                     <li class="list-group-item">5. เมื่อตอบถูกจะได้คะแนนข้อละ 1 คะแนน</li>
                 </ul>
                 <div class="container my-3">
                     <label for="username" class="form-label"><h5><b>Line Username :</b></h5></label>
-                    <input type="text" id="username" class="form-control" placeholder="กรอกชื่อ-สกุล" readonly required>
+                    <input type="text" id="username" class="form-control" placeholder="กำลังโหลดชื่อ..." readonly required>
                 </div>
             </div>
             <div class="card-footer text-end">
@@ -118,7 +111,6 @@
         </div>
     </div>
 
-    <!-- Quiz Box -->
     <div class="container list py-5 quiz_box" style="display:none;">
         <div class="card">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -143,7 +135,6 @@
         </div>
     </div>
 
-    <!-- Result Box -->
     <div class="container list py-5 result_box" style="display:none;">
         <div class=" text-center">
             <div class="card-body">
@@ -153,7 +144,6 @@
                 <h5 class="complete_text">คุณทำข้อสอบครบทุกข้อแล้ว!</h5>
                 <div class="score_text my-3 mt-3 mb-3"></div>
                 <div class="d-flex justify-content-center mb-3">
-<!--                     <button class="btn btn-primary restart me-2">เริ่มใหม่อีกครั้ง</button> -->
                     <button class="btn btn-primary share_score me-2">แชร์คะแนน</button>
                 </div>
             </div>
@@ -163,12 +153,13 @@
 
 <script>
 
-    // Global Variables
-    const liffId = '2009142140-tN6Av2XW';  // Line LIFF ID
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbyeRSH_GGoU0NhlT1bJFNNv9-DxwWBxgdSSzmPvuVnmfDCJIf5h_RMCrNxkSiuR4vY/exec'; // Web App URL for data saving
-    const fetchUrl = 'https://opensheet.elk.sh/1NNPn11tCZZS1LbUQSem1ZS732E5x49PUyejvB6DjEog/Question'; // URL for fetching quiz questions
-    const TIME_LIMIT = 60;  // Time limit for each question (in seconds)
-    const Question_LIMIT = 5;   // Question limit
+    // --- ส่วนตั้งค่า (เปลี่ยนข้อมูลของคุณที่นี่) ---
+    const liffId = 'AAAAAAAAAA';  // ใส่ LINE LIFF ID ของคุณ
+    const webAppUrl = 'BBBBBBBBBB'; // ใส่ลิงก์ Google Web App สำหรับบันทึกคะแนน
+    const fetchUrl = 'https://opensheet.elk.sh/CCCCCCCCCCC/Question'; // ใส่ลิงก์ดึงข้อมูลคำถาม
+    const TIME_LIMIT = 60;  // เวลาต่อข้อ (วินาที)
+    const Question_LIMIT = 5;   // จำนวนข้อที่ต้องการสุ่มขึ้นมาทำ
+    // ----------------------------------------
 
     let questions = [];
     let userName = "";
@@ -179,11 +170,9 @@
     let counterLine;
     let answered = false;
 
-    // Display the time limit on the page
     document.getElementById("timeValueDisplay").textContent = TIME_LIMIT;
     document.getElementById("timerValue").textContent = TIME_LIMIT;
 
-    // Initialize LIFF and load questions
     function initializeLiff() {
         liff.init({
             liffId: liffId 
@@ -191,10 +180,10 @@
             if (liff.isLoggedIn()) {
                 liff.getProfile().then(profile => {
                     lineUID = profile.userId;
-                    const displayName = profile.displayName; 
-                    document.getElementById('username').value = displayName; 
+                    userName = profile.displayName; 
+                    document.getElementById('username').value = userName; 
                     loadQuestions();
-                  checkDailySubmission()
+                    checkDailySubmission(); // ตรวจสอบการล็อกวันละครั้ง
                 }).catch(err => console.error(err));
             } else {
                 liff.login();
@@ -202,7 +191,6 @@
         }).catch(err => console.error(err));
     }
 
-    // Load questions from JSON URL
     function loadQuestions() {
         $.LoadingOverlay("show", { text: "กำลังโหลดคำถาม..." });
 
@@ -217,26 +205,16 @@
                     answer: item["เฉลย"]
                 }));
 
-                // Shuffle the questions array
                 allQuestions = shuffleArray(allQuestions);
-
                 questions = allQuestions.slice(0, Question_LIMIT);
-
                 $.LoadingOverlay("hide");
             })
             .catch(error => {
-                console.error('Error fetching questions:', error);
-                Swal.fire({
-                    title: 'เกิดข้อผิดพลาด!',
-                    text: 'ไม่สามารถโหลดคำถามได้ กรุณาลองใหม่อีกครั้ง',
-                    icon: 'error',
-                    confirmButtonText: 'ตกลง'
-                });
+                console.error('Error:', error);
                 $.LoadingOverlay("hide");
             });
     }
 
-    // Function to shuffle an array
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -245,27 +223,15 @@
         return array;
     }
 
-    // Start Quiz Event
     document.querySelectorAll('.restart').forEach(button => {
         button.addEventListener('click', function() {
-            userName = document.getElementById('username').value.trim();
-            if (userName === "") {
-                Swal.fire('กรุณากรอกชื่อ-สกุล');
+            if (document.getElementById('username').value.trim() === "") {
+                Swal.fire('กรุณารอข้อมูลจาก LINE สักครู่...');
                 return;
             }
-
-            // Reset quiz box and result box visibility
             document.querySelector('.result_box').style.display = 'none';
             document.querySelector('.quiz_box').style.display = 'block'; 
             document.querySelector('.container').style.display = 'none';  
-
-            // Reset counters and timers
-            que_count = 0;
-            userScore = 0;
-            clearInterval(counter);
-            clearInterval(counterLine);
-
-            // Start the quiz
             startQuiz();
         });
     });
@@ -279,9 +245,8 @@
         startTimerLine(0);
     }
 
-    // Function to display questions
     function showQuestions(index){
-        answered = false; // Reset the answered flag for the new question
+        answered = false;
         const que_text = document.querySelector(".que_text");
         const questionImage = document.getElementById("question-image");
 
@@ -295,9 +260,8 @@
         }
 
         const option_list = document.querySelector(".option_list");
-        option_list.innerHTML = ''; // Clear previous options
+        option_list.innerHTML = ''; 
 
-        // Display multiple-choice options as clickable buttons
         questions[index].options.forEach(option => {
             const optionBtn = document.createElement("button");
             optionBtn.classList.add("btn", "btn-outline-primary", "d-block", "w-100", "mb-2");
@@ -305,19 +269,18 @@
             option_list.appendChild(optionBtn);
 
             optionBtn.addEventListener('click', function() {
-                if (!answered) {  // Only allow answering once
+                if (!answered) {
                     optionSelected(optionBtn, option);
                 }
             });
         });
-
-        document.querySelector('.next_btn').style.display = 'none'; // Hide "Next" button initially
+        document.querySelector('.next_btn').style.display = 'none';
     }
 
     function optionSelected(answerBtn, userAnswer){
         clearInterval(counter);
         clearInterval(counterLine);
-        answered = true; // Mark the question as answered
+        answered = true;
         let correctAnswer = questions[que_count].answer;
 
         if(userAnswer === correctAnswer){
@@ -325,101 +288,81 @@
             answerBtn.classList.add("bg-success", "text-white");
         } else {
             answerBtn.classList.add("bg-danger", "text-white");
+            // แสดงข้อที่ถูกให้ดู
+            document.querySelectorAll(".btn-outline-primary").forEach(opt => {
+                if(opt.textContent === correctAnswer) opt.classList.add("bg-success", "text-white");
+            });
         }
-
-        document.querySelector('.next_btn').style.display = 'block'; // Show "Next" button after answering
+        document.querySelector('.next_btn').style.display = 'block';
     }
 
-    // Next question button event
     document.querySelector('.next_btn').addEventListener('click', function() {
         if (que_count < questions.length - 1) {
             que_count++;
             showQuestions(que_count);
             queCounter(que_count + 1);
-            startTimer(TIME_LIMIT);  // Reset timer
-            startTimerLine(0);  // Reset progress bar
+            startTimer(TIME_LIMIT);
+            startTimerLine(0);
         } else {
             showResult();
         }
     });
 
-    // Show the result box when the quiz is done
-function showResult(){
-    document.querySelector('.quiz_box').style.display = "none";
-    document.querySelector('.result_box').style.display = "block";
+    function showResult(){
+        document.querySelector('.quiz_box').style.display = "none";
+        document.querySelector('.result_box').style.display = "block";
 
-    const scoreText = document.querySelector(".score_text");
-    scoreText.innerHTML = userScore > 3
-        ? `<h4>ยอดเยี่ยม! 🎉 </h4> <p>${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`
-        : userScore > 1
-        ? `<h4>เก่งมาก 😎 </h4><p>${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`
-        : `<h4>เสียใจด้วย 😐 </h4><p> ${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`;
+        const scoreText = document.querySelector(".score_text");
+        scoreText.innerHTML = `<h4>คุณทำได้ ${userScore}/${questions.length} คะแนน</h4>`;
 
-    saveQuizResults(userName, userScore, questions.length);
+        saveQuizResults(userName, userScore, questions.length);
 
-    document.querySelector('.share_score').addEventListener('click', function() {
-        shareScore(userName, userScore, questions.length);
-    });
-}
+        document.querySelector('.share_score').addEventListener('click', function() {
+            shareScore(userName, userScore, questions.length);
+        });
+    }
 
-    // Function to save quiz results
-    function saveQuizResults(userName, userScore, totalQuestions) {
+    function saveQuizResults(name, score, total) {
         $.LoadingOverlay("show", { text: "กำลังบันทึกข้อมูล..." });
 
-        const payload = {
-            name: userName,
-            score: userScore,
-            total: totalQuestions,
-            lineUID: lineUID
-        };
+        const payload = { name: name, score: score, total: total, lineUID: lineUID };
 
-        fetch(webAppUrl, {  // Use global webAppUrl
+        fetch(webAppUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         }).then(() => {
             $.LoadingOverlay("hide");
-          
-        // Store the current date as the last submission date
-        const today = new Date().toISOString().split('T')[0];
-        localStorage.setItem('lastSubmission', today);
-          
-          
-        Swal.fire({
-            icon: 'success',
-            title: 'บันทึกข้อมูลสำเร็จ',
-            text: 'ข้อมูลถูกบันทึกลงใน Google Sheets เรียบร้อยแล้ว.'
+            
+            // --- ปรับปรุง: ใช้เวลาไทยในการบันทึกการล็อก ---
+            const today = new Date().toLocaleDateString('en-CA'); 
+            localStorage.setItem('lastSubmission', today);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'บันทึกสำเร็จ',
+                text: 'ระบบได้บันทึกคะแนนของคุณแล้ว'
+            });
+        }).catch(error => {
+            console.error('Error:', error);
+            $.LoadingOverlay("hide");
         });
-    }).catch(error => {
-        console.error('Error:', error);
-        $.LoadingOverlay("hide");
-        Swal.fire({
-            icon: 'error',
-            title: 'บันทึกข้อมูลไม่สำเร็จ',
-            text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.'
-        });
-    });
     }
 
-    // Timer for the quiz
     function startTimer(time){
         counter = setInterval(() => {
             document.querySelector(".timer_sec").textContent = time < 10 ? "0" + time : time;
             time--;
             if (time < 0) {
                 clearInterval(counter);
-                if (!answered) {
-                    markAsIncorrect();
-                }
+                if (!answered) markAsIncorrect();
             }
         }, 1000);
     }
 
     function markAsIncorrect() {
-        answered = true; // Mark the question as answered
+        answered = true;
         document.querySelectorAll(".btn-outline-primary").forEach(option => {
             if (option.textContent === questions[que_count].answer) {
                 option.classList.add("bg-success", "text-white");
@@ -428,170 +371,67 @@ function showResult(){
         document.querySelector('.next_btn').style.display = 'block';
     }
 
-    // Progress bar timer
     function startTimerLine(time){
         const quizBoxWidth = document.querySelector('.quiz_box').clientWidth;
-
         counterLine = setInterval(() => {
             time += quizBoxWidth / (TIME_LIMIT * 1000 / 29);
             document.querySelector(".time_line").style.width = `${time}px`;
-            if (time >= quizBoxWidth) {
-                clearInterval(counterLine);
-            }
+            if (time >= quizBoxWidth) clearInterval(counterLine);
         }, 29);
     }
 
-    // Question counter display
     function queCounter(index){
-        document.querySelector(".total_que").innerHTML = `<span><p>ข้อที่ ${index} / ${questions.length}</span>`;
+        document.querySelector(".total_que").innerHTML = `<span>ข้อที่ ${index} / ${questions.length}</span>`;
     }
 
-    // Function to share quiz score via LIFF
     function shareScore(name, score, total) {
         const flexMessage = {
             "type": "flex",
-            "altText": "Quiz Score",
+            "altText": "ผลคะแนน Daily Quiz",
             "contents": {
                 "type": "bubble",
-                "hero": {
-                    "type": "image",
-                    "url": "https://lh3.googleusercontent.com/d/16e0psswM0vGCigwFAAbqr_MvPHoi5tFH",
-                    "size": "full",
-                    "aspectRatio": "20:13",
-                    "aspectMode": "cover"
-                },
                 "body": {
                     "type": "box",
                     "layout": "vertical",
-                    "spacing": "md",
                     "contents": [
-                        {
-                            "type": "text",
-                            "text": "ผลการทำแบบทดสอบ",
-                            "size": "xl",
-                            "weight": "bold"
-                        },
-                        {
-                            "type": "box",
-                            "layout": "vertical",
-                            "spacing": "sm",
-                            "contents": [
-                                {
-                                    "type": "box",
-                                    "layout": "baseline",
-                                    "contents": [
-                                        {
-                                            "type": "text",
-                                            "text": "ชื่อ-นามสกุล :",
-                                            "weight": "bold",
-                                            "margin": "sm",
-                                            "flex": 0
-                                        },
-                                        {
-                                            "type": "text",
-                                            "text": name,
-                                            "size": "sm",
-                                            "align": "end",
-                                            "color": "#aaaaaa"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "box",
-                                    "layout": "baseline",
-                                    "contents": [
-                                        {
-                                            "type": "text",
-                                            "text": "คะแนนที่ได้ :",
-                                            "weight": "bold",
-                                            "margin": "sm",
-                                            "flex": 0
-                                        },
-                                        {
-                                            "type": "text",
-                                            "text": `${score}/${total}`,
-                                            "size": "sm",
-                                            "align": "end",
-                                            "color": "#aaaaaa"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "type": "text",
-                            "text": "กิจกรรม Daily Quiz , พัฒนาโดย อ.ประกาศิต พูลวงษ์",
-                            "wrap": true,
-                            "color": "#aaaaaa",
-                            "size": "xxs",
-                            "margin": "lg"
-                        }
-                    ]
-                },
-                "footer": {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                        {
-                            "type": "button",
-                            "style": "primary",
-                            "color": "#905c44",
-                            "margin": "xxl",
-                            "action": {
-                                "type": "uri",
-                                "label": "ดูตารางคะแนน",
-                                "uri": "https://script.google.com/macros/s/AKfycbzmVdNuCW5UMM-KYi7T7AB2Tacr-HpdR49CUqSCbrJ3Zkno7KnrD4jOqz_E9QpzN10/exec"
-                            }
-                        }
+                        { "type": "text", "text": "ผลการทำแบบทดสอบ", "weight": "bold", "size": "xl" },
+                        { "type": "text", "text": `ชื่อ: ${name}`, "margin": "md" },
+                        { "type": "text", "text": `คะแนนที่ได้: ${score}/${total} คะแนน`, "size": "lg", "color": "#1DB446", "weight": "bold" }
                     ]
                 }
             }
         };
 
-        // Open the share target picker
         liff.shareTargetPicker([flexMessage])
             .then(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'แชร์คะแนนสำเร็จ!',
-                    text: 'คะแนนของคุณถูกแชร์เรียบร้อยแล้ว.'
-                });
+                Swal.fire('แชร์คะแนนสำเร็จ!', '', 'success');
             })
-            .catch(err => {
-                console.error('Error sharing score:', err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'แชร์คะแนนไม่สำเร็จ',
-                    text: 'เกิดข้อผิดพลาดในการแชร์คะแนนของคุณ.'
-                });
-            });
+            .catch(err => console.error(err));
     }
 
-  
-      // Check if the user has already submitted the quiz today
+    // --- ฟังก์ชันตรวจการเข้าใช้งาน (ปรับปรุงเวลาไทย) ---
     function checkDailySubmission() {
         const lastSubmission = localStorage.getItem('lastSubmission');
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        const today = new Date().toLocaleDateString('en-CA'); // ดึงวันที่ YYYY-MM-DD ตามเวลาไทย
         
         if (lastSubmission === today) {
             Swal.fire({
                 icon: 'warning',
                 title: 'คุณได้ส่งแบบทดสอบแล้ววันนี้',
-                text: 'โปรดกลับมาอีกครั้งในวันพรุ่งนี้เพื่อทำแบบทดสอบใหม่',
-                confirmButtonText: 'ตกลง'
+                text: 'โปรดกลับมาอีกครั้งในวันพรุ่งนี้หลังเที่ยงคืนเพื่อทำใหม่ครับ',
+                confirmButtonText: 'รับทราบ'
             });
-            document.querySelector('.restart').disabled = true; // Disable the restart button
+            document.querySelector('.restart').disabled = true; 
         } else {
-            document.querySelector('.restart').disabled = false; // Enable the restart button
+            document.querySelector('.restart').disabled = false;
         }
     }
   
-  
 </script>
 
-<footer class="text-center text-lg-start bg-light text-muted" style="  position: static;left: 0;bottom: 0;width: 100%;">
+<footer class="text-center text-lg-start bg-light text-muted" style="position: static; width: 100%;">
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2026 Copyright  | พัฒนาโดย อ.ประกาศิต พูลวงษ์<br/>
+        © 2026 Daily Quiz | พัฒนาโดยครูสิทธิชาติ สิทธิ
     </div>
 </footer>
 
