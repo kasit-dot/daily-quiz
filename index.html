@@ -72,7 +72,6 @@
             text-align: center;
         }
     </style>
-
 </head>
 <body onload="initializeLiff()">
 
@@ -89,15 +88,14 @@
             </div>
             <div class="card-body text-dark px-0">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item border-0">1. มีเวลา <span id="timeValueDisplay">60</span> วินาทีในการทำแต่ละข้อ</li>
+                    <li class="list-group-item border-0">1. มีเวลา 60 วินาทีในการทำแต่ละข้อ</li>
                     <li class="list-group-item border-0">2. เมื่อตอบแล้วไม่สามารถเปลี่ยนคำตอบได้</li>
-                    <li class="list-group-item border-0">3. เมื่อทำเสร็จแล้วจะไม่สามารถแก้ไขได้อีก</li>
-                    <li class="list-group-item border-0">4. ต้องทำข้อสอบให้ครบทุกข้อในแต่ละครั้ง</li>
-                    <li class="list-group-item border-0">5. เมื่อตอบถูกจะได้คะแนนข้อละ 1 คะแนน</li>
+                    <li class="list-group-item border-0">3. ระบบจะสุ่มข้อสอบมาให้ทำครั้งละ 5 ข้อ</li>
+                    <li class="list-group-item border-0">4. สามารถทำแบบทดสอบได้วันละ 1 ครั้ง</li>
                 </ul>
                 <div class="mt-4 px-3">
-                    <label for="username" class="form-label fw-bold">Line Username :</label>
-                    <input type="text" id="username" class="form-control" placeholder="กำลังโหลดชื่อจาก LINE..." readonly required>
+                    <label for="username" class="form-label fw-bold">ชื่อนักศึกษา (LINE Name) :</label>
+                    <input type="text" id="username" class="form-control" placeholder="กำลังดึงข้อมูล..." readonly>
                 </div>
             </div>
             <div class="card-footer bg-transparent border-0 text-center">
@@ -111,7 +109,7 @@
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top">
                 <h5 class="card-title mb-0" id="que-count-text">แบบทดสอบ</h5>
                 <div class="timer text-white px-3 py-2 rounded bg-danger">
-                    <span class="timer_sec fw-bold" id="timerValue">60</span> วินาที
+                    <span id="timerValue">60</span> วินาที
                 </div>
             </div>
             <div class="progress" style="height: 5px;">
@@ -119,7 +117,7 @@
             </div>
             <div class="card-body text-dark">
                 <img id="question-image" class="question-image" style="display:none;">
-                <div class="que_text h5 mb-4"></div>
+                <div class="que_text h5 mb-4 fw-bold"></div>
                 <div class="option_list d-grid gap-2"></div>
             </div>
             <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
@@ -135,7 +133,7 @@
                 <i class="fas fa-crown fa-4x text-warning"></i>
             </div>
             <h3 class="complete_text">คุณทำข้อสอบครบแล้ว!</h3>
-            <div class="score_text my-4 h4 text-primary"></div>
+            <div class="score_text my-4 h4 text-primary fw-bold"></div>
             <div class="d-grid gap-2 mb-3">
                 <button class="btn btn-primary btn-lg share_score"><i class="fab fa-line me-2"></i>แชร์คะแนนเข้ากลุ่ม</button>
             </div>
@@ -143,24 +141,20 @@
     </div>
 
 <script>
-    // --- ตั้งค่าระบบ (อ้างอิงข้อมูลจริงของอาจารย์) ---
-    const liffId = '2009142140-tN6Av2XW';  //
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbyeRSH_GGoU0NhlT1bJFNNv9-DxwWBxgdSSzmPvuVnmfDCJIf5h_RMCrNxkSiuR4vY/exec'; //
-    const fetchUrl = 'https://opensheet.elk.sh/1NNPn11tCZZS1LbUQSem1ZS732E5x49PUyejvB6DjEog/Question'; //
-    const TIME_LIMIT = 60;  // เวลาต่อข้อ
-    const QUESTION_LIMIT = 5; // จำนวนข้อที่สุ่มมาทำ
+    // --- ตั้งค่าระบบ ---
+    const liffId = '2009142140-tN6Av2XW'; 
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbyeRSH_GGoU0NhlT1bJFNNv9-DxwWBxgdSSzmPvuVnmfDCJIf5h_RMCrNxkSiuR4vY/exec'; 
+    const fetchUrl = 'https://opensheet.elk.sh/1NNPn11tCZZS1LbUQSem1ZS732E5x49PUyejvB6DjEog/Question'; 
 
     let questions = [];
-    let userName = "";
     let lineUID = '';
+    let userName = "";
     let que_count = 0;
     let userScore = 0;
-    let userAnswers = []; // เก็บ {id: รหัสข้อ, result: 1/0}
+    let userAnswers = []; // เก็บข้อมูลในรูปแบบ {id: "IDข้อ", result: 1 หรือ 0}
     let counter, counterLine, answered = false;
 
-    document.getElementById("timeValueDisplay").textContent = TIME_LIMIT;
-    document.getElementById("timerValue").textContent = TIME_LIMIT;
-
+    // เริ่มต้นระบบ LIFF
     function initializeLiff() {
         liff.init({ liffId: liffId }).then(() => {
             if (liff.isLoggedIn()) {
@@ -168,8 +162,8 @@
                     lineUID = profile.userId;
                     userName = profile.displayName;
                     document.getElementById('username').value = userName;
-                    checkDailySubmission(); // ตรวจสอบการทำซ้ำ
-                    loadQuestions(); // โหลดข้อสอบ
+                    checkDailySubmission(); // เช็กว่าวันนี้ทำหรือยัง
+                    loadQuestions(); // โหลดโจทย์
                 }).catch(err => console.error(err));
             } else {
                 liff.login();
@@ -177,22 +171,22 @@
         }).catch(err => console.error(err));
     }
 
+    // โหลดข้อสอบจาก Google Sheets
     function loadQuestions() {
-        $.LoadingOverlay("show", { text: "กำลังเตรียมข้อสอบ..." });
+        $.LoadingOverlay("show", { text: "กำลังดึงข้อสอบ..." });
         fetch(fetchUrl)
             .then(response => response.json())
             .then(data => {
-                // ดึง ID จากคอลัมน์ A และข้อมูลอื่นๆ
                 let allQuestions = data.map((item, index) => ({
-                    id: item["ID"] || (index + 1), // ใช้ ID ประจำข้อเพื่อวิเคราะห์รายข้อ
+                    id: item["ID"] || (index + 1), // สำคัญ: ดึง ID เพื่อใช้ระบุคอลัมน์ใน Score
                     question: item["โจทย์"],
                     image: item["Image"],
                     options: [item["ตัวเลือก 1"], item["ตัวเลือก 2"], item["ตัวเลือก 3"], item["ตัวเลือก 4"]],
                     answer: item["เฉลย"]
                 }));
 
-                // สุ่มเลือกข้อสอบ 5 ข้อจากทั้งหมด
-                questions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, QUESTION_LIMIT);
+                // สุ่มเลือกมา 5 ข้อ
+                questions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 5);
                 $.LoadingOverlay("hide");
             });
     }
@@ -215,7 +209,7 @@
         answered = false;
         $('.next_btn').hide();
         $('.que_text').text(questions[index].question);
-        $('#que-count-text').text(`ข้อที่ ${index + 1} / ${questions.length}`);
+        $('#que-count-text').text(`ข้อที่ ${index + 1} / 5`);
         
         if (questions[index].image) {
             $('#question-image').attr('src', questions[index].image).show();
@@ -229,7 +223,7 @@
                 .click(function() { if(!answered) selectOption(this, option); })
                 .appendTo('.option_list');
         });
-        startTimer(TIME_LIMIT);
+        startTimer(60);
         startTimerLine(0);
     }
 
@@ -241,7 +235,7 @@
         let correct = questions[que_count].answer;
         let isCorrect = (val === correct ? 1 : 0);
         
-        // บันทึก ID คู่กับผลคะแนนเพื่อไปวิเคราะห์รายข้อใน Sheet
+        // เก็บผลลัพธ์รายข้อคู่กับ ID ข้อสอบ
         userAnswers.push({ id: questions[que_count].id, result: isCorrect });
 
         if (isCorrect) {
@@ -258,7 +252,7 @@
 
     $('.next_btn').click(function() {
         que_count++;
-        if (que_count < questions.length) {
+        if (que_count < 5) {
             showQuestion(que_count);
         } else {
             showResult();
@@ -268,12 +262,13 @@
     function showResult() {
         $('.quiz_box').hide();
         $('.result_box').show();
-        $('.score_text').text(`คุณทำได้ ${userScore} / ${questions.length} คะแนน`);
-        saveData(); // บันทึกข้อมูล
+        $('.score_text').text(`ได้คะแนน ${userScore} / 5`);
+        saveData(); 
     }
 
+    // ส่งข้อมูลไปยัง Google Apps Script
     function saveData() {
-        $.LoadingOverlay("show", { text: "กำลังบันทึกและวิเคราะห์ผล..." });
+        $.LoadingOverlay("show", { text: "กำลังส่งผลการวิเคราะห์..." });
         fetch(webAppUrl, {
             method: 'POST',
             mode: 'no-cors',
@@ -281,14 +276,13 @@
                 lineUID: lineUID,
                 name: userName,
                 score: userScore,
-                total: questions.length,
-                answers: userAnswers // ส่งข้อมูลรายข้อ {id, result}
+                total: 5,
+                answers: userAnswers // ส่งข้อมูลรายข้อกลับไป
             })
         }).then(() => {
             $.LoadingOverlay("hide");
-            // บันทึกวันที่เพื่อล็อกวันละ 1 ครั้ง (ใช้เวลาไทย)
             localStorage.setItem('lastSub', new Date().toLocaleDateString('en-CA'));
-            Swal.fire('สำเร็จ!', 'บันทึกคะแนนและวิเคราะห์รายข้อเรียบร้อย', 'success');
+            Swal.fire('สำเร็จ!', 'บันทึกคะแนนรายข้อเรียบร้อยแล้วครับอาจารย์', 'success');
         });
     }
 
@@ -310,7 +304,7 @@
     function startTimerLine(time) {
         const quizBoxWidth = document.querySelector('.quiz_box').clientWidth;
         counterLine = setInterval(() => {
-            time += quizBoxWidth / (TIME_LIMIT * 1000 / 29);
+            time += quizBoxWidth / (60 * 1000 / 29);
             document.querySelector(".time_line").style.width = `${time}px`;
             if (time >= quizBoxWidth) clearInterval(counterLine);
         }, 29);
@@ -321,8 +315,8 @@
         if (localStorage.getItem('lastSub') === today) {
             Swal.fire({
                 icon: 'warning',
-                title: 'คุณทำไปแล้วในวันนี้',
-                text: 'โปรดกลับมาใหม่ในวันพรุ่งนี้หลังเที่ยงคืนนะครับ',
+                title: 'วันนี้ทำไปแล้วครับ',
+                text: 'กลับมาทำใหม่ได้หลังเที่ยงคืนนะครับ',
                 confirmButtonText: 'ตกลง'
             });
             $('.restart').prop('disabled', true);
@@ -332,15 +326,14 @@
     $('.share_score').click(function() {
         liff.shareTargetPicker([{
             "type": "flex",
-            "altText": "PsyQ Quiz Score",
+            "altText": "ผลสอบ PsyQ",
             "contents": {
                 "type": "bubble",
                 "body": {
                     "layout": "vertical",
                     "contents": [
                         { "type": "text", "text": "ผลสอบรายวัน PsyQ", "weight": "bold", "size": "xl" },
-                        { "type": "text", "text": `คุณ ${userName}`, "margin": "md" },
-                        { "type": "text", "text": `ทำได้ ${userScore}/${questions.length} คะแนน`, "size": "xxl", "color": "#1DB446", "weight": "bold" }
+                        { "type": "text", "text": `คุณ ${userName} ทำได้ ${userScore}/5`, "margin": "md", "color": "#1DB446", "weight": "bold" }
                     ]
                 }
             }
