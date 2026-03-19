@@ -76,7 +76,7 @@
 <body onload="initializeLiff()">
 
     <center class="mb-4">
-        <img src="https://lh3.googleusercontent.com/d/1x6Obg8pQTwyOCOJgUeedP69z_zp37OW6" class="mt-4" style="width:120px; border-radius: 50%;">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=JeabTeacher" class="mt-4" style="width:120px; border-radius: 50%; background: #fff; padding: 5px;">
         <h2 class="mt-3"> PsyQ : จิตเวช 5 ข้อ...รอให้คุณตอบ!</h2>
         <h5 class="text-center text-danger">ระบบทบทวนความรู้การพยาบาลสุขภาพจิตและจิตเวช</h5>
     </center>
@@ -88,12 +88,11 @@
             </div>
             <div class="card-body text-dark px-0">
                 <li class="list-group-item">1. คุณมีเวลา <span id="timeValueDisplay">60</span> วินาทีในการทำแต่ละข้อ</li>
-                    <li class="list-group-item">2. ระบบจะสุ่มข้อสอบให้ทำวันละ 5 ข้อ เมื่อตอบแล้วไม่สามารถเปลี่ยนคำตอบได้</li>
-                    <li class="list-group-item">3. เมื่อทำเสร็จแล้วจะไม่สามารถแก้ไขได้อีก (ระบบ Reset หลัง 24.00 น.)</li>
-                    <li class="list-group-item">4. ต้องทำข้อสอบให้ครบทุกข้อในแต่ละครั้ง</li>
-                    <li class="list-group-item">5. เมื่อตอบถูกจะได้คะแนนข้อละ 1 คะแนน</li>
+                <li class="list-group-item">2. ระบบจะสุ่มข้อสอบให้ทำวันละ 5 ข้อ เมื่อตอบแล้วไม่สามารถเปลี่ยนคำตอบได้</li>
+                <li class="list-group-item">3. เมื่อทำเสร็จแล้วจะไม่สามารถแก้ไขได้อีก (ระบบ Reset หลัง 24.00 น.)</li>
+                <li class="list-group-item">4. ต้องทำข้อสอบให้ครบทุกข้อในแต่ละครั้ง</li>
+                <li class="list-group-item">5. เมื่อตอบถูกจะได้คะแนนข้อละ 1 คะแนน</li>
 
-                </ul>
                 <div class="mt-4 px-3">
                     <label for="username" class="form-label fw-bold">Line Username :</label>
                     <input type="text" id="username" class="form-control" placeholder="กำลังโหลดชื่อ..." readonly required>
@@ -179,7 +178,8 @@
                 question: item["โจทย์"],
                 image: item["Image"],
                 options: [item["ตัวเลือก 1"], item["ตัวเลือก 2"], item["ตัวเลือก 3"], item["ตัวเลือก 4"]],
-                answer: item["เฉลย"]
+                answer: item["เฉลย"],
+                reason: item["เหตุผล"] // ดึงข้อมูลเหตุผลจากคอลัมน์ I
             }));
             questions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 5);
             $.LoadingOverlay("hide");
@@ -203,7 +203,7 @@
         answered = false;
         $('.next_btn').hide();
         $('.que_text').text(questions[index].question);
-        queCounter(index + 1); // เรียกใช้ตัวนับข้อที่แก้ไขใหม่
+        queCounter(index + 1);
         
         if (questions[index].image) {
             $('#question-image').attr('src', questions[index].image).show();
@@ -221,7 +221,6 @@
         startTimerLine(0);
     }
 
-    // ส่วนแสดงตัวนับข้อสอบ (แก้ไขตามที่ต้องการ)
     function queCounter(index) {
         document.querySelector(".total_que").innerHTML = `<span><p>ข้อที่ ${index} / ${questions.length}</span>`;
     }
@@ -232,16 +231,32 @@
         clearInterval(counterLine);
         
         let correct = questions[que_count].answer;
+        let reason = questions[que_count].reason || "ทบทวนความรู้สม่ำเสมอนะครับ"; 
         let isCorrect = (val === correct ? 1 : 0);
+        
         userAnswers.push({ id: questions[que_count].id, result: isCorrect });
 
         if (isCorrect) {
             userScore++;
             $(btn).addClass('bg-success text-white');
+            Swal.fire({
+                icon: 'success',
+                title: 'ถูกต้องครับ!',
+                text: 'เหตุผล: ' + reason,
+                confirmButtonText: 'ข้อถัดไป',
+                confirmButtonColor: '#198754'
+            });
         } else {
             $(btn).addClass('bg-danger text-white');
             $('.option_list button').each(function() {
                 if($(this).text() === correct) $(this).addClass('bg-success text-white');
+            });
+            Swal.fire({
+                icon: 'error',
+                title: 'ยังไม่ถูกนะครับ',
+                html: `คำตอบที่ถูกคือ: <b>${correct}</b><br><br><b>เหตุผล:</b> ${reason}`,
+                confirmButtonText: 'เข้าใจแล้ว',
+                confirmButtonColor: '#dc3545'
             });
         }
         $('.next_btn').show();
@@ -313,7 +328,6 @@
         }
     }
 
-    // ฟังก์ชันแชร์คะแนน Flex Message (แก้ไขตามที่ต้องการ)
     $('.share_score').click(function() {
         const name = userName;
         const score = userScore;
@@ -326,7 +340,7 @@
                 "type": "bubble",
                 "hero": {
                     "type": "image",
-                    "url": "https://lh3.googleusercontent.com/d/1PxkYOarbT2H0mooBAXQWCjvJEEgV7u98",
+                    "url": "https://api.dicebear.com/7.x/avataaars/svg?seed=Result",
                     "size": "full",
                     "aspectRatio": "20:13",
                     "aspectMode": "cover"
@@ -374,8 +388,8 @@
                             "margin": "xxl",
                             "action": {
                                 "type": "uri",
-                                "label": "ดูตารางคะแนน",
-                                "uri": "https://script.google.com/macros/s/AKfycbzKTWM9JFAxbsXXn1LoahUSk_PN5LIPiubGHWoY0Wigz3t2ZdZTFbwH9lKiZRHnvBU/exec"
+                                "label": "ท้าทายเพื่อนใหม่",
+                                "uri": "https://kasit-dot.github.io/daily-quiz/"
                             }
                         }
                     ]
